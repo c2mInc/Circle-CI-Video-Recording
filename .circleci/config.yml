@@ -43,3 +43,9 @@ jobs:
           path: output/scan
       - store_artifacts:
           path: output
+
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - build_test
