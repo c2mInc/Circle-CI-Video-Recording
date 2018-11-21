@@ -1,0 +1,45 @@
+version: 2
+references:
+  ## Paths
+  test_video_mp4_path: &test_video_mp4_path
+    /Users/distiller/src/testrecording.mp4
+  test_video_mov_path: &test_video_mov_path
+    /Users/distiller/src/testrecording.mov
+  workspace: &workspace
+    ~/src
+
+  ## Configurations
+  ios_config: &ios_config
+    working_directory: *workspace
+    macos:
+      xcode: "10.0.0"
+    environment:
+      FL_OUTPUT_DIR: output
+
+jobs:
+  build_test:
+    <<: *ios_config
+    steps:
+      - checkout
+      - run: for run in {1..5}; do osascript ./fastlane/recording_related/dismiss_warning.scpt; done # Dismisses the same named computer error which appears on CircleCI (Runs multiple times as the error appears multiple times sometimes)
+      # Pre-start Simulator
+      - run:
+          name: Pre-start simulator
+          command: xcrun instruments -w "iPhone 8 (12.0) [" || true
+      # Start Testing
+      - run:
+          name: Fastlane Update
+          command: sudo gem update fastlane
+      - run:
+          name: Build and Test
+          command: fastlane build_and_test
+          no_output_timeout: 30m
+      # Store Testing Video and Results
+      - store_artifacts:
+          path: *test_video_mp4_path
+      - store_artifacts:
+          path: *test_video_mov_path
+      - store_test_results:
+          path: output/scan
+      - store_artifacts:
+          path: output

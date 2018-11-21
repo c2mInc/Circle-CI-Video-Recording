@@ -1,0 +1,81 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  slack_url = "<YOUR-SLACK-WEBHOOK>"
+  video_finished = false
+
+  before_all do
+    setup_circle_ci
+  end
+
+  desc "Build and Test"
+  lane :build_and_test do
+    # Build (Build and test are executed seperately to shorten the video time)
+    xcodebuild(
+      workspace: "<YOUR-WORKSPACE>",
+      scheme: "<YOUR-SCHEME>",
+      clean: true,
+      configuration: "Release",
+      destination: ["platform=iOS Simulator,name=iPhone 8,OS=12.0"],
+      derivedDataPath: "/Users/distiller/src/test_build_folder",
+      xcargs: "build-for-testing",
+    )
+    # Start recording (Executes Apple Script)
+    sh("osascript ./recording_related/start_recording.scpt")
+    # Execute Tests
+    run_tests(devices: ["iPhone 8"], destination: ["platform=iOS Simulator,name=iPhone 8,OS=12.0"], derived_data_path: "/Users/distiller/src/test_build_folder", test_without_building: true, configuration: "Release")
+    # Stop recording
+    sh("cd .. && osascript ./fastlane/recording_related/stop_recording.scpt")
+    video_finished = true
+
+    # Uncomment if you want to save video as .mp4 instead of .mov
+    # sh("HOMEBREW_NO_AUTO_UPDATE=1 brew install ffmpeg")
+    # sh('ffmpeg -y -i /Users/distiller/src/testrecording.mov -vf "setpts=1.25*PTS" -r 20 /Users/distiller/src/testrecording.mp4')
+    # sh("rm /Users/distiller/src/testrecording.mov")
+
+    # Uncomment if you want to send Slack message on passed tests
+    # slack(message: "Build & Test Completed",
+    #       slack_url: slack_url,
+    #       default_payloads: [:git_branch, :git_author, :last_git_commit_message])
+  end
+
+  error do |lane, exception|
+    # Save video even if the tests fail
+    if !video_finished
+      # Stop recording
+      sh("cd .. && osascript ./fastlane/recording_related/stop_recording.scpt") # Stop recording
+
+      # Uncomment if you want to save video as .mp4 instead of .mov
+      # sh("HOMEBREW_NO_AUTO_UPDATE=1 brew install ffmpeg")
+      # sh('ffmpeg -y -i /Users/distiller/src/testrecording.mov -vf "setpts=1.25*PTS" -r 20 /Users/distiller/src/testrecording.mp4')
+      # sh("rm /Users/distiller/src/testrecording.mov")
+
+      # Uncomment if you want to send Slack message on failed tests with video url
+      # slack(
+      #   message: "Test Failed, CircleCI Build Number: " + ENV["CIRCLE_BUILD_NUM"],
+      #   channel: "<YOUR-SLACK-CHANNEL>",
+      #   success: false,
+      # Below sends the .mp4 file link, use this if you uncommented the video file conversion
+      #   # payload: {"Test Video" => "https://" + ENV["CIRCLE_BUILD_NUM"] + "-<LOOK-UP-AND-INSERT-YOUR-ORGANIZATION-CODE-FROM-CIRCLECI>-gh.circle-artifacts.com/0/Users/distiller/src/testrecording.mp4"},
+      #	  payload: {"Test Video" => "https://" + ENV["CIRCLE_BUILD_NUM"] + "-<LOOK-UP-AND-INSERT-YOUR-ORGANIZATION-CODE-FROM-CIRCLECI>-gh.circle-artifacts.com/0/Users/distiller/src/testrecording.mov"},
+      #   slack_url: slack_url,
+      #   default_payloads: [:git_branch, :git_author, :last_git_commit_message],
+      # )
+    end
+  end
+end
