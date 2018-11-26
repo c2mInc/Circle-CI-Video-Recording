@@ -42,6 +42,16 @@ tell application "QuickTime Player"
 	end tell
 end tell
 ```
+
+## Formating Recorded Video
+
+Applescript uses Quick Time and by default it saves videos as .mov files. However, these files can't be played on web and their file size is quite large. As a work around you can uncomment the below lines in Fastfile in order to convert the output video to .mp4 format.
+```
+sh("HOMEBREW_NO_AUTO_UPDATE=1 brew install ffmpeg")
+sh('ffmpeg -y -i /Users/distiller/src/testrecording.mov -vf "setpts=1.25*PTS" -r 20 /Users/distiller/src/testrecording.mp4')
+sh("rm /Users/distiller/src/testrecording.mov")
+```
+
 ## Author
 
 [Connected2.me](http://connected2.me) / <a href="mailto:ddu@oriens.co">Dogu Deniz Ugur</a> <a href="https://github.com/DoguD">@DoguD</a>
