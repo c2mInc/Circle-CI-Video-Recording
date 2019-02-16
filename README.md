@@ -1,18 +1,18 @@
-# Circle CI Video Recording
+# CircleCI Video Recording
 
-Circle CI Video Recording is an example configuration of Circle CI's config.yml and fastlane's Fastfile which lets you record your iOS XCTests. It uses applescript files for the recording process.
+CircleCI Video Recording is an example configuration of CircleCI's config.yml and fastlane's Fastfile which lets you record your iOS XCTests. It uses applescript files for the recording process.
 
 
 ## Getting Started
 
-You need to initialize Circle CI and fastlane in order to use Circle CI Video Recording. You can setup Circle CI by following [this documentation](https://circleci.com/docs/2.0/getting-started/) and fastlane with [this one](https://docs.fastlane.tools/getting-started/ios/setup/).
+You need to initialize CircleCI and fastlane in order to use CircleCI Video Recording. You can setup CircleCI by following [this documentation](https://circleci.com/docs/2.0/getting-started/) and fastlane with [this one](https://docs.fastlane.tools/getting-started/ios/setup/).
 
 ## Usage
 
-Copy .circleci and Fastlane folders from Circle CI Video Recording to your project. After this, with every commit you make to Github, a commit workflow which runs XCTests will start on CircleCI and the recording will be saved as artifacts to CircleCI.
+Copy .circleci and Fastlane folders from CircleCI Video Recording to your project. After this, with every commit you make to Github, a commit workflow which runs XCTests will start on CircleCI and the recording will be saved as artifacts to CircleCI.
 
 ## How It Works
-The commit triggers the `build_test` job on Circle CI, the job runs `build_and_test` lane from Fastlane.
+The commit triggers the `build_test` job on CircleCI, the job runs `build_and_test` lane from Fastlane.
 The `build_and_test` job first builds the application, then starts video recording. After the recording is started, it runs the tests and stops recording at the end.
 
 ### Start Video Recording Applescript
@@ -58,4 +58,4 @@ sh("rm /Users/distiller/src/testrecording.mov")
 
 ## License
 
-Circle CI Video Recording is available under the MIT license. See the LICENSE file for more info.
+CircleCI Video Recording is available under the MIT license. See the LICENSE file for more info.
