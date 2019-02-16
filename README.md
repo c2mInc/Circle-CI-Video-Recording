@@ -5,7 +5,7 @@ CircleCI Video Recording is an example configuration of CircleCI's config.yml an
 
 ## Getting Started
 
-You need to initialize CircleCI and fastlane in order to use CircleCI Video Recording. You can setup CircleCI by following [this documentation](https://circleci.com/docs/2.0/getting-started/) and fastlane with [this one](https://docs.fastlane.tools/getting-started/ios/setup/).
+You need to initialize CircleCI and fastlane in order to use CircleCI Video Recording. You can setup CircleCI by following [this documentation](https://circleci.com/docs/2.0/getting-started/) and fastlane with [this one](https://docs.fastlane.tools/getting-started/ios/setup/). MacOS environment is needed in order to run XCTests and record video of them. 
 
 ## Usage
 
@@ -15,7 +15,7 @@ Copy .circleci and Fastlane folders from CircleCI Video Recording to your projec
 The commit triggers the `build_test` job on CircleCI, the job runs `build_and_test` lane from Fastlane.
 The `build_and_test` job first builds the application, then starts video recording. After the recording is started, it runs the tests and stops recording at the end.
 
-### Start Video Recording Applescript
+### Applescript which Starts Video Recording
 ```
 tell application "QuickTime Player"
 	set recording to new screen recording
@@ -26,7 +26,7 @@ tell application "QuickTime Player"
 end tell
 ```
 
-### Stop Video Recording Applescript
+### Applescript which Stops Video Recording
 ```
 tell application "QuickTime Player"
 	set recording to document "screen recording"
