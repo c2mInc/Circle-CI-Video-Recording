@@ -16,7 +16,7 @@ The commit triggers the `build_test` job on CircleCI, the job runs `build_and_te
 The `build_and_test` job first builds the application, then starts video recording. After the recording is started, it runs the tests and stops recording at the end.
 
 ### Applescript which Starts Video Recording
-```
+```applescript
 tell application "QuickTime Player"
 	set recording to new screen recording
 	tell recording
@@ -27,7 +27,7 @@ end tell
 ```
 
 ### Applescript which Stops Video Recording
-```
+```applescript
 tell application "QuickTime Player"
 	set recording to document "screen recording"
 	tell recording
@@ -46,7 +46,7 @@ end tell
 ## Formating Recorded Video
 
 Applescript uses Quick Time and by default it saves videos as .mov files. However, these files can't be played on web and their file size is quite large. As a work around you can uncomment the below lines in Fastfile in order to convert the output video to .mp4 format.
-```
+```ruby
 sh("HOMEBREW_NO_AUTO_UPDATE=1 brew install ffmpeg")
 sh('ffmpeg -y -i /Users/distiller/src/testrecording.mov -vf "setpts=1.25*PTS" -r 20 /Users/distiller/src/testrecording.mp4')
 sh("rm /Users/distiller/src/testrecording.mov")
@@ -54,7 +54,7 @@ sh("rm /Users/distiller/src/testrecording.mov")
 
 ## Author
 
-[Connected2.me](http://connected2.me) / <a href="mailto:ddu@oriens.co">Dogu Deniz Ugur</a> <a href="https://github.com/DoguD">@DoguD</a>
+[Connected2.me](http://connected2.me) / <a href="mailto:dogudeniz.ugur@gmail.com">Dogu Deniz Ugur</a> <a href="https://github.com/DoguD">@DoguD</a>
 
 ## License
 
